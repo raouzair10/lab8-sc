@@ -86,8 +86,36 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         return vertexAdded;
     }
     
-    @Override public int set(String source, String target, int weight) {
-        throw new RuntimeException("not implemented");
+    @Override public int set(L source, L target, int weight) {
+        assert source != target;
+        assert weight >= 0;
+        
+        final Vertex<L> sourceVertex;
+        final Vertex<L> targetVertex;
+        
+        Set<L> verticeLabels = vertices();
+        if ( verticeLabels.contains(source) ) {
+            int sourceIndex = indexInVertices(source);
+            sourceVertex = vertices.get(sourceIndex);
+        } else {
+            sourceVertex = new Vertex<>(source);
+            vertices.add(sourceVertex);
+        }
+        
+        if ( verticeLabels.contains(target) ) {
+            int targetIndex = indexInVertices(target);
+            targetVertex = vertices.get(targetIndex);
+        } else {
+            targetVertex = new Vertex<>(target);
+            vertices.add(targetVertex);
+        }
+        
+        int sourcePrevWeight = sourceVertex.setTarget(target, weight);
+        int targetPrevWeight = targetVertex.setSource(source, weight);
+        assert sourcePrevWeight == targetPrevWeight;
+        
+        checkRep();
+        return sourcePrevWeight;
     }
     
     @Override public boolean remove(String vertex) {
