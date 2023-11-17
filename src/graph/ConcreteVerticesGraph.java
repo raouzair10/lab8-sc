@@ -133,8 +133,10 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         return removedVertex != null;
     }
     
-    @Override public Set<String> vertices() {
-        throw new RuntimeException("not implemented");
+    @Override public Set<L> vertices() {
+        return vertices.stream()
+                .map(Vertex::getLabel)
+                .collect(Collectors.toSet());
     }
     
     @Override public Map<String, Integer> sources(String target) {
