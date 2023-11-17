@@ -76,8 +76,14 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
     }
     //end of helper method
     
-    @Override public boolean add(String vertex) {
-        throw new RuntimeException("not implemented");
+    @Override public boolean add(L vertex) {        
+        if ( vertices().contains(vertex) ) {
+            return false;
+        }
+        Vertex<L> vertexObj = new Vertex<>(vertex);    
+        final boolean vertexAdded = vertices.add(vertexObj);
+        checkRep();
+        return vertexAdded;
     }
     
     @Override public int set(String source, String target, int weight) {
