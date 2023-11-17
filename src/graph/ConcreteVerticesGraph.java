@@ -118,8 +118,19 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         return sourcePrevWeight;
     }
     
-    @Override public boolean remove(String vertex) {
-        throw new RuntimeException("not implemented");
+    @Override public boolean remove(L vertex) {
+        if ( !( vertices().contains(vertex)) ) {
+            return false;
+        }
+        int vertexIndex = indexInVertices(vertex);
+        assert vertexIndex != -1;
+        final Vertex<L> removedVertex = vertices.remove(vertexIndex);
+        assert removedVertex.getLabel() == vertex;
+        
+        for( Vertex<L> v: vertices ) {
+            v.remove(vertex);
+        }
+        return removedVertex != null;
     }
     
     @Override public Set<String> vertices() {
