@@ -47,9 +47,11 @@ public class ConcreteEdgesGraph implements Graph<String> {
         assert sizeOfVertices >= minNumberOfVertices;  
     }
     
+    /*returns true if the new vertex is added*/
     @Override public boolean add(String vertex) {
-        throw new RuntimeException("not implemented");
+    	return vertices.add(vertex);
     }
+    
     
     @Override public int set(String source, String target, int weight) {
         throw new RuntimeException("not implemented");
