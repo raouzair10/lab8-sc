@@ -30,6 +30,23 @@ public class ConcreteEdgesGraph implements Graph<String> {
     
     // TODO checkRep
     
+    /*constructor*/
+    public ConcreteEdgesGraph(){
+    }
+    
+    /*checkRep*/
+    private void checkRep(){
+        final int sizeOfEdges = edges.size();
+        final int sizeOfVertices = vertices.size();
+        int minNumberOfVertices;
+        if (sizeOfEdges == 0) {
+        	minNumberOfVertices = 0;
+        } else {
+        	minNumberOfVertices = (int) Math.ceil(Math.sqrt(2 * sizeOfEdges) + 0.5);
+        }
+        assert sizeOfVertices >= minNumberOfVertices;  
+    }
+    
     @Override public boolean add(String vertex) {
         throw new RuntimeException("not implemented");
     }
