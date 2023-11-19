@@ -86,8 +86,32 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         return -1;
     }
     
-    @Override public boolean remove(String vertex) {
-        throw new RuntimeException("not implemented");
+    /*@param vertex to be removed
+     *@return boolean true if removed*/
+    @Override public boolean remove(L vertex) {
+        final int initialSizeEdges = edges.size();
+        final int initialSizeVertices = vertices.size();
+        
+        Predicate<Edge<L>> vertexInEdge = (Edge<L> edge) -> 
+              ( ( edge.getSource().equals(vertex) ) ||
+                ( edge.getTarget().equals(vertex) ) ) ;
+        Predicate<L> vertexInVertices = v -> v.equals(vertex);
+        
+        boolean removedEdge = edges.removeIf(vertexInEdge);
+        boolean removedVertice = vertices.removeIf(vertexInVertices);
+        
+        //NB a vertex can exist without being in an edge
+        //if removedEdge, then removedVertice
+        if(removedVertice){
+            assert initialSizeVertices != vertices.size();
+            assert initialSizeVertices - 1 == vertices.size();
+        }
+        if(removedEdge){
+            assert initialSizeEdges != edges.size();
+            assert removedVertice;
+        }
+        checkRep();
+        return initialSizeVertices - 1 == vertices.size();
     }
     
     @Override public Set<String> vertices() {
