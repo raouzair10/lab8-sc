@@ -14,10 +14,10 @@ import java.util.Set;
  * 
  * <p>PS2 instructions: you MUST use the provided rep.
  */
-public class ConcreteEdgesGraph implements Graph<String> {
+public class ConcreteEdgesGraph<L> implements Graph<L> {
     
-    private final Set<String> vertices = new HashSet<>();
-    private final List<Edge> edges = new ArrayList<>();
+	private final Set<L> vertices = new HashSet<>();
+    private final List<Edge<L>> edges = new ArrayList<>();
     
     // Abstraction function:
     //   TODO
@@ -33,28 +33,57 @@ public class ConcreteEdgesGraph implements Graph<String> {
     /*constructor*/
     public ConcreteEdgesGraph(){
     }
-    
     /*checkRep*/
     private void checkRep(){
         final int sizeOfEdges = edges.size();
         final int sizeOfVertices = vertices.size();
-        int minNumberOfVertices;
-        if (sizeOfEdges == 0) {
-        	minNumberOfVertices = 0;
-        } else {
-        	minNumberOfVertices = (int) Math.ceil(Math.sqrt(2 * sizeOfEdges) + 0.5);
-        }
+        int minNumberOfVertices = 
+                sizeOfEdges == 0 ? 0 : (int)Math.ceil(Math.sqrt(2 * sizeOfEdges) + 0.5);
+        
         assert sizeOfVertices >= minNumberOfVertices;  
     }
     
     /*returns true if the new vertex is added*/
-    @Override public boolean add(String vertex) {
-    	return vertices.add(vertex);
+    @Override public boolean add(L vertex) {
+        return vertices.add(vertex);
+    }    
+    
+    /*@param takes the source, target and weight to be set
+     *@return previous Weight*/
+    @Override public int set(L source, L target, int weight) {
+        assert weight >= 0;
+        
+        int indexOfEdge = indexOfEdgeInEdges(source, target);
+        int previousWeight = 0;
+        final Edge<L> previousEdge;
+        
+        if (weight > 0) {
+            Edge<L> newEdge = new Edge<>(source, target, weight);
+            if ( indexOfEdge < 0 ) {
+                add(source);
+                add(target);
+                edges.add(newEdge);
+            } else {
+                previousEdge = edges.set(indexOfEdge, newEdge);
+                previousWeight = previousEdge.getWeight();
+            }
+        } else if ( weight == 0 && indexOfEdge >= 0) {
+            previousEdge = edges.remove(indexOfEdge);
+            previousWeight = previousEdge.getWeight();
+        }
+        checkRep();
+        return previousWeight;
     }
-    
-    
-    @Override public int set(String source, String target, int weight) {
-        throw new RuntimeException("not implemented");
+    /*helper method*/
+    private int indexOfEdgeInEdges(L source, L target){        
+        for(int i = 0;  i < edges.size(); i++){
+            Edge<L> edge = edges.get(i);
+            if (edge.getSource().equals(source) &&
+                    edge.getTarget().equals(target)){
+                return i;
+            }
+        }
+        return -1;
     }
     
     @Override public boolean remove(String vertex) {
