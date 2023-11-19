@@ -178,23 +178,150 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
  * <p>PS2 instructions: the specification and implementation of this class is
  * up to you.
  */
-class Vertex {
+class Vertex<L> {
     
     // TODO fields
+	 private final L label;
+	 private final Map<L, Integer> sources = new HashMap<>();
+	 private final Map<L, Integer> targets = new HashMap<>();
     
-    // Abstraction function:
-    //   TODO
-    // Representation invariant:
-    //   TODO
-    // Safety from rep exposure:
-    //   TODO
-    
-    // TODO constructor
-    
-    // TODO checkRep
+	// TODO constructor
+	 public Vertex(final L label){
+	        this.label = label;        
+	    }
+	// TODO checkRep
+	 private void checkRep(){
+	        final Set<L> sourceLabels = sources.keySet();
+	        final Set<L> targetLabels = targets.keySet();
+	        
+	        assert !sourceLabels.contains(this.label);
+	        assert !targetLabels.contains(this.label);
+	    }
+	//helper code
+	private void checkInputLabel(final L inputLabel){
+	        assert inputLabel != null;
+	        assert inputLabel != this.label;
+	    }
+	public L getLabel(){
+	        return this.label;
+	    }
     
     // TODO methods
+	public boolean addSource(final L source, final int weight){
+        checkInputLabel(source);
+        assert weight > 0;
+        
+        if ( sources.putIfAbsent(source, weight) == null ){
+            checkRep();
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Adds a target connection from this vertex
+     */
+    public boolean addTarget(final L target, final int weight){
+        checkInputLabel(target);
+        assert weight > 0;
+        
+        if ( targets.putIfAbsent(target, weight) == null ) {
+            checkRep();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Removes a vertex from this vertex, if it was a source, target or both
+     */
+    public int remove(final L vertex) {
+        checkInputLabel(vertex);
+        int sourcePrevWeight = removeSource(vertex);
+        int targetPrevWeight = removeTarget(vertex);
+        
+        if ( sourcePrevWeight > 0 && targetPrevWeight > 0 ) {
+            assert sourcePrevWeight == targetPrevWeight;
+        }
+        return sourcePrevWeight == 0 ? targetPrevWeight : sourcePrevWeight;
+    }
+    /**
+     * Removes a source connection to this vertex
+     */
+    public int removeSource(final L source){
+        checkInputLabel(source);
+        
+        Integer previousWeight = sources.remove(source);
+        
+        checkRep();
+        return previousWeight == null ? 0 : previousWeight;
+    }
+    /**
+     * Removes a target connection from this vertex
+     */
+    public int removeTarget(final L target){
+        checkInputLabel(target);
+        
+        Integer previousWeight = targets.remove(target);
+        
+        checkRep();
+        return previousWeight == null ? 0 : previousWeight;
+    }
+    
+    public int setSource(final L source, final int weight){
+        checkInputLabel(source);
+        assert weight >= 0;
+        final int previousWeight;
+        
+        if ( weight == 0 ) {
+            previousWeight = removeSource(source); 
+        } else if ( addSource(source, weight) || sources.get(source) == (Integer)weight) {
+            previousWeight = 0;
+        } else {
+            previousWeight = sources.replace(source, weight);
+        }
+        checkRep();
+        return previousWeight;
+    }
+    public int setTarget(final L target, final int weight){
+        checkInputLabel(target);
+        assert weight >= 0;
+        final int previousWeight;
+        
+        if ( weight == 0 ) {
+            previousWeight = removeTarget(target);
+        } else if ( addTarget(target, weight) || targets.get(target) == (Integer)weight ) {
+            previousWeight = 0;
+        } else {
+            previousWeight = targets.replace(target, weight);
+        }
+        checkRep();
+        return previousWeight;
+    }
+
+    /** Returns an immutable view of this vertex's sources*/
+    public Map<L, Integer> getSources(){
+        return Collections.unmodifiableMap(sources);
+    }
+    /** Returns an immutable view of this vertex's targets*/
+    public Map<L, Integer> getTargets(){
+        return Collections.unmodifiableMap(targets);
+    }
+
+    public boolean isTarget(final L vertex){
+        return targets.containsKey(vertex);
+    }
+
+    public boolean isSource(final L vertex){
+        return sources.containsKey(vertex);
+    }
     
     // TODO toString()
+	@Override public String toString(){
+        return String.format(
+                "%s -> %s \n" +
+                "%s <- %s",
+                this.label.toString(), this.targets,
+                this.label.toString(), this.sources);
+    }
     
 }
