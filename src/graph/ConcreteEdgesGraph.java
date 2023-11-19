@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * An implementation of Graph.
@@ -112,7 +113,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
             assert removedVertice;
         }
         checkRep();
-        return initialSizeVertices - 1 == vertices.size();
+        return initialSizeVertices - 1 == vertices.size();c
     }
     
     /** Returns an read-only view of ConcreteEdgesGraph's vertices */
@@ -120,15 +121,28 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         return Collections.unmodifiableSet(vertices);
     }
     
-    @Override public Map<String, Integer> sources(String target) {
-        throw new RuntimeException("not implemented");
+    /** Returns a map of a target's sources */
+    @Override public Map<L, Integer> sources(L target) {
+        return edges.stream()
+                .filter(edge -> edge.getTarget().equals(target))
+                .collect(Collectors.toMap(Edge::getSource, Edge::getWeight));
     }
-    
-    @Override public Map<String, Integer> targets(String source) {
-        throw new RuntimeException("not implemented");
+    /** Returns a map of a source's targets */
+    @Override public Map<L, Integer> targets(L source) {
+        return edges.stream()
+                .filter(edge -> edge.getSource().equals(source))
+                .collect(Collectors.toMap(Edge::getTarget, Edge::getWeight));
     }
     
     // TODO toString()
+    @Override public String toString(){
+        if ( edges.isEmpty() ) {
+            return "Empty Graph";
+        }
+        return edges.stream()
+                .map(edge -> edge.toString())
+                .collect(Collectors.joining("\n"));
+    }
     
 }
 
