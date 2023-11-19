@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -94,9 +95,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         final int initialSizeEdges = edges.size();
         final int initialSizeVertices = vertices.size();
         
-        Predicate<Edge<L>> vertexInEdge = (Edge<L> edge) -> 
-              ( ( edge.getSource().equals(vertex) ) ||
-                ( edge.getTarget().equals(vertex) ) ) ;
+        Predicate<Edge<L>> vertexInEdge = (Edge<L> edge) -> ( ( edge.getSource().equals(vertex) )||( edge.getTarget().equals(vertex) ) ) ;
         Predicate<L> vertexInVertices = v -> v.equals(vertex);
         
         boolean removedEdge = edges.removeIf(vertexInEdge);
@@ -113,7 +112,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
             assert removedVertice;
         }
         checkRep();
-        return initialSizeVertices - 1 == vertices.size();c
+        return initialSizeVertices - 1 == vertices.size();
     }
     
     /** Returns an read-only view of ConcreteEdgesGraph's vertices */
@@ -154,23 +153,69 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
  * <p>PS2 instructions: the specification and implementation of this class is
  * up to you.
  */
-class Edge {
-    
-    // TODO fields
-    
-    // Abstraction function:
-    //   TODO
-    // Representation invariant:
-    //   TODO
-    // Safety from rep exposure:
-    //   TODO
-    
+class Edge<L> {
+	// TODO fields
+	private final L source;
+    private final L target;
+    private final int weight;
+   
     // TODO constructor
-    
+    public Edge(final L source, final L target, final int weight){
+        assert weight > 0;
+        
+        this.source = source;
+        this.target = target;
+        this.weight = weight;
+        checkRep();
+    }
     // TODO checkRep
-    
-    // TODO methods
-    
-    // TODO toString()
+    private void checkRep(){
+        assert source != null;
+        assert target != null;
+        assert weight > 0;
+    }
+ // TODO methods
+    //observers (Getters and Setters)
+    /** Returns this Edge's source*/   
+    public L getSource(){
+        return source;
+    }
+    /**Returns this Edge's target*/
+    public L getTarget(){
+        return target;
+    }
+    /**Returns this Edge's weight*/
+    public int getWeight(){
+        return weight;
+    }
+    public Edge<L> setWeight(int newWeight){
+        checkRep();
+        return new Edge<>(source, target, newWeight);
+    }
+ // TODO toString()
+    @Override public String toString(){
+        return getSource().toString() + 
+                " -> " + 
+                getTarget().toString() + 
+                ": " + 
+                getWeight();
+    }
+    @Override public boolean equals(Object that){
+        if (! (that instanceof Edge)) {
+            return false;
+        }
+        Edge<?> thatEdge = (Edge<?>)that;
+        return this.getSource().equals(thatEdge.getSource()) &&
+               this.getTarget().equals(thatEdge.getTarget()) &&
+               this.getWeight() == thatEdge.getWeight();
+    }
+    @Override public int hashCode(){
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getSource().hashCode();
+        result = prime * result + getTarget().hashCode();
+        result = prime * result + (int) getWeight();
+        return result;
+    }
     
 }
