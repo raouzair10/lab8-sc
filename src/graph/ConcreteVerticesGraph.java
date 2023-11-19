@@ -139,15 +139,34 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
                 .collect(Collectors.toSet());
     }
     
-    @Override public Map<String, Integer> sources(String target) {
-        throw new RuntimeException("not implemented");
+    /** Returns an immutable view of source vertices to a target */
+    @Override public Map<L, Integer> sources(L target) {
+        final int targetIndex = indexInVertices(target);
+        if ( targetIndex < 0 ) {
+            return Collections.emptyMap();
+        }
+        Vertex<L> targetVertex = vertices.get(targetIndex);
+        
+        return Collections.unmodifiableMap(targetVertex.getSources());
     }
-    
-    @Override public Map<String, Integer> targets(String source) {
-        throw new RuntimeException("not implemented");
+    /** Returns an immutable view of target vertices from a target */
+    @Override public Map<L, Integer> targets(L source) {
+        final int sourceIndex = indexInVertices(source);
+        if ( sourceIndex < 0 ) {
+            return Collections.emptyMap();
+        }
+        Vertex<L> sourceVertex = vertices.get(sourceIndex);
+        
+        return Collections.unmodifiableMap(sourceVertex.getTargets());
     }
     
     // TODO toString()
+    @Override public String toString(){
+        return vertices.stream()
+                .filter(vertex -> vertex.getTargets().size() > 0)
+                .map(vertex -> vertex.getLabel().toString() + " -> " + vertex.getTargets())
+                .collect(Collectors.joining("\n"));
+    }
     
 }
 
