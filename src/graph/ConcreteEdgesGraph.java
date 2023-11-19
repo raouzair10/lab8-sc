@@ -4,6 +4,7 @@
 package graph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -114,8 +115,9 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         return initialSizeVertices - 1 == vertices.size();
     }
     
-    @Override public Set<String> vertices() {
-        throw new RuntimeException("not implemented");
+    /** Returns an read-only view of ConcreteEdgesGraph's vertices */
+    @Override public Set<L> vertices() {
+        return Collections.unmodifiableSet(vertices);
     }
     
     @Override public Map<String, Integer> sources(String target) {
