@@ -5,6 +5,7 @@ package poet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import graph.Graph;
 
@@ -82,6 +83,11 @@ public class GraphPoet {
     public String poem(String input) {
         throw new RuntimeException("not implemented");
     }
+
+	public List<String> getCorpusWords() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     // TODO toString()
     

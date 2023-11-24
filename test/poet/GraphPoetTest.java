@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -44,4 +46,38 @@ public class GraphPoetTest {
     final GraphPoet graphOneLine = instanceGraph("test/poet/OneLine.txt");
     final GraphPoet graphMultipleLines = instanceGraph("test/poet/MultipleLines.txt");
 
+
+// Tests for GraphPoet()
+@Test
+// covers corpus contains one word
+public void testGraphPoet_OneWord() {        
+    List<String> corpusWords = graphOneWord.getCorpusWords();
+    
+    assertEquals("Expected corpus to contain one word",
+            1, corpusWords.size());
+    assertTrue("Expected word in lowercase",
+            corpusWords.contains("serenity"));
 }
+@Test
+// covers corpus contains one line
+//        word adjacency count > 1
+public void testGraphPoet_OneLine() {
+    List<String> corpusWords = graphOneLine.getCorpusWords();
+    
+    assertEquals("Expected all words in corpus",
+            13, corpusWords.size());
+    assertTrue("Expected words in lowercase",
+            corpusWords.contains("in"));
+}
+@Test
+// covers corpus contains multiple line
+//        word adjacency count > 1
+public void testGraphPoet_MultipleLine() {
+    List<String> corpusWords = graphMultipleLines.getCorpusWords();
+    
+    assertNotEquals("Expected non-empty list", Collections.EMPTY_LIST, corpusWords);
+    assertTrue("Expected words in lowercase",
+            corpusWords.contains("dreams"));
+    assertTrue("Expected words in lowercase",
+            corpusWords.contains("water"));
+}}
