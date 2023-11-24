@@ -77,7 +77,44 @@ public void testGraphPoet_MultipleLine() {
     
     assertNotEquals("Expected non-empty list", Collections.EMPTY_LIST, corpusWords);
     assertTrue("Expected words in lowercase",
-            corpusWords.contains("dreams"));
+            corpusWords.contains("whispers"));
     assertTrue("Expected words in lowercase",
-            corpusWords.contains("water"));
-}}
+            corpusWords.contains("dreams"));
+}
+//Tests for poem()
+@Test
+// covers one word
+public void testPoem_OneWord() {
+    String input = "where";
+    String output = graphMultipleLines.poem(input);
+    
+    assertEquals("Expected unchanged input", input, output);
+}
+@Test
+// covers multiple words
+public void testPoem_MultipleWords() {
+    String input = "Whispers in the breeze to explore!";
+    String output = graphOneLine.poem(input);
+    String expected = "Whispers in the breeze Seek to explore";
+    
+    assertEquals("Expected poetic output with words in input unchanged",
+            expected, output);
+}
+
+@Test
+// covers word pairs with adjacency count > 1   
+public void testPoem_MultipleAdjacencies() {
+    String input = "you MAY me";
+    String output = graphMultipleLines.poem(input);
+    
+    assertNotEquals("Expected a bridge word inserted",
+            input, output);
+    assertTrue("Expected input words unchanged",
+            output.contains("you") && output.contains("MAY"));
+    assertTrue("Expected correct bridge word", 
+            output.contains("write")
+            || output.contains("find"));
+}
+
+
+}
