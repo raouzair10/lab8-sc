@@ -173,6 +173,8 @@ public class GraphPoet {
         return Collections.unmodifiableList(corpusWords);
     }
     
-    // TODO toString()
+    @Override public String toString() {
+        return affinityGraph.toString();
+    }
     
 }
