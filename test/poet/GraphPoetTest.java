@@ -67,7 +67,7 @@ public void testGraphPoet_OneLine() {
     assertEquals("Expected all words in corpus",
             13, corpusWords.size());
     assertTrue("Expected words in lowercase",
-            corpusWords.contains("in"));
+            corpusWords.contains("to"));
 }
 @Test
 // covers corpus contains multiple line
@@ -93,9 +93,9 @@ public void testPoem_OneWord() {
 @Test
 // covers multiple words
 public void testPoem_MultipleWords() {
-    String input = "Whispers in the breeze to explore!";
+    String input = "Seek to explore new and exciting synergies!";
     String output = graphOneLine.poem(input);
-    String expected = "Whispers in the breeze Seek to explore";
+    String expected = "Seek to explore strange new life and exciting synergies!";
     
     assertEquals("Expected poetic output with words in input unchanged",
             expected, output);
