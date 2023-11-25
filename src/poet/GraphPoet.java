@@ -4,6 +4,7 @@
 package poet;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,7 +94,27 @@ public class GraphPoet {
     private void checkRep() {
         assert affinityGraph != null;
     }
-    
+    /**
+     * Generates a word affinity graph
+     * 
+     * @return a graph whose vertices are lowercase words
+     *         and edges are the counts of adjacencies
+     */
+    private Graph<String> generateAffinityGraph(List<String> words){
+        Graph<String> graph = Graph.empty();
+        
+        for (int i = 0; i < words.size(); i++) {
+            String source = words.get(i);
+            graph.add(source);
+            if ((i + 1) >= words.size()) {
+                break;
+            }
+            String target = words.get(i + 1);
+            int prev = graph.set(source, target, 1);
+            graph.set(source, target, prev + 1);
+        }
+        return graph;
+    }
     /**
      * Generate a poem.
      * 
