@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.io.BufferedReader;
 
 import graph.Graph;
@@ -123,7 +127,36 @@ public class GraphPoet {
      * @return poem (as described above)
      */
     public String poem(String input) {
-        throw new RuntimeException("not implemented");
+    	String[] inputWords = input.split("\\s");
+        StringBuilder poem = new StringBuilder(input);
+        int fromIndex = 0;
+        
+        for (int i = 0; i < inputWords.length; i++) {
+            if (i + 1 >= inputWords.length) {
+                break;
+            }
+            Map<String, Integer> word1Targets = 
+                    affinityGraph.targets(inputWords[i].toLowerCase());
+            Map<String, Integer> word2Sources =
+                    affinityGraph.sources(inputWords[i+1].toLowerCase());
+            Set<String> probableBridges = word1Targets.keySet();
+            
+            List<String> allBridges = probableBridges.stream()
+                    .filter(possibleBridge -> word2Sources.containsKey(possibleBridge))
+                    .collect(Collectors.toList());
+            
+            if (!allBridges.isEmpty()) {
+                Random rand = new Random();
+                int  n = rand.nextInt(allBridges.size());
+                String bridge = allBridges.get(n);
+                // get the index of word 2 from the poem
+                int insertAt = poem.indexOf(inputWords[i+1], fromIndex);
+                // insert the bridge word before that word
+                poem.insert(insertAt, bridge + " ");
+            }
+        }
+        checkRep();
+        return poem.toString();
     }
 
     /** 
