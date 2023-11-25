@@ -76,9 +76,10 @@ public class GraphPoet {
      * @throws IOException if the corpus file cannot be found or read
      */
     public GraphPoet(File corpus) throws IOException {
-        throw new RuntimeException("not implemented");
+        corpusWords = extractWordsFromFile(corpus);
+        affinityGraph = generateAffinityGraph(corpusWords);
+        checkRep();
     }
-    
     /** Returns a list of words in lowercase, separation done at whitespace */
     private List<String> extractWordsFromFile(File corpus) throws IOException {
         List<String> words = new ArrayList<>();
