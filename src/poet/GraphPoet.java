@@ -5,7 +5,11 @@ package poet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
+import java.io.BufferedReader;
 
 import graph.Graph;
 
@@ -74,6 +78,17 @@ public class GraphPoet {
         throw new RuntimeException("not implemented");
     }
     
+    /** Returns a list of words in lowercase, separation done at whitespace */
+    private List<String> extractWordsFromFile(File corpus) throws IOException {
+        List<String> words = new ArrayList<>();
+        try (Scanner s = new Scanner(new BufferedReader(new FileReader(corpus)))) {
+            while (s.hasNext()) {
+                words.add(s.next().toLowerCase());
+            }
+        }
+        assert words != Collections.EMPTY_LIST;
+        return words;
+    }
     // TODO checkRep
     private void checkRep() {
         assert affinityGraph != null;
