@@ -62,12 +62,21 @@ public class GraphPoet {
     private final Graph<String> affinityGraph;
     private final List<String> corpusWords;
     
-    // Abstraction function:
-    //   TODO
+    //Abstraction function:
+    //   represents a poetry generator that uses a corpus of text
+    //   that takes an input string and converts it into a poem.
+    //
     // Representation invariant:
-    //   TODO
+    //   graph is a non-null Graph object with words as vertices
+    //   and number of adjacent words as edges.
+    //
     // Safety from rep exposure:
-    //   TODO
+    //   All fields are private and final
+    //   graph is a mutable type therefore, no references to it are provided
+    //   for the client to mutate
+    //   corpusWords is a mutable list, getCorpusWords() returns
+    //   a read-only view preventing the client from 
+    //   making any mutations
     
     /**
      * Create a new poet with the graph from corpus (as described above).
