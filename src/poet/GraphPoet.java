@@ -126,10 +126,19 @@ public class GraphPoet {
         throw new RuntimeException("not implemented");
     }
 
-	public List<String> getCorpusWords() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /** 
+     * Returns the words in the affinity graph generated from the corpus
+     * 
+     * Words are defined as non-empty case-insensitive strings of non-space 
+     * non-newline characters. They are delimited in the corpus by spaces, newlines, 
+     * or the ends of the file.
+     * 
+     * @return list of words in the order they appear in the corpus. All words are
+     *         in lowercase
+     */
+    public List<String> getCorpusWords() {
+        return Collections.unmodifiableList(corpusWords);
+    }
     
     // TODO toString()
     
