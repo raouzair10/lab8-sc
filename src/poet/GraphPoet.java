@@ -54,6 +54,8 @@ import graph.Graph;
 public class GraphPoet {
     
     private final Graph<String> graph = Graph.empty();
+    private final Graph<String> affinityGraph;
+    private final List<String> corpusWords;
     
     // Abstraction function:
     //   TODO
@@ -73,6 +75,9 @@ public class GraphPoet {
     }
     
     // TODO checkRep
+    private void checkRep() {
+        assert affinityGraph != null;
+    }
     
     /**
      * Generate a poem.
